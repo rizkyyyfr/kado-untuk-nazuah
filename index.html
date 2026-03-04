@@ -81,8 +81,11 @@
             display: none;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             z-index: 10;
-            width: 100%;
+            width: 100vw;
+            height: 100vh;
+            position: relative; /* Penting untuk posisi foto di samping */
         }
 
         .envelope-wrapper {
@@ -93,7 +96,8 @@
             border-radius: 0 0 10px 10px;
             cursor: pointer;
             transition: transform 0.3s;
-            margin-top: 50px;
+            margin-top: 100px;
+            z-index: 5;
         }
 
         .envelope-wrapper:hover { transform: scale(1.05); }
@@ -127,46 +131,96 @@
             padding: 20px;
             box-sizing: border-box;
             color: #333;
-            overflow-y: hidden;
+            overflow: hidden;
             text-align: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
         }
 
         .letter h3 { color: #ff4d4d; margin-top: 0; }
         .letter p { font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; }
 
-        /* Grid Foto di dalam surat */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .photo-grid img {
-            width: 100%;
-            border-radius: 8px;
-            border: 3px solid #ffe6e6;
-            box-sizing: border-box;
-        }
-
-        /* Class untuk animasi membuka amplop */
+        /* Animasi membuka amplop & menarik surat */
         .open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
         .open .letter {
-            transform: translateY(-250px);
-            height: 500px; /* Panjang surat saat ditarik keluar */
+            transform: translateY(-280px); /* Ditarik lebih tinggi */
+            height: max-content; /* Ukuran menyesuaikan teks */
+            min-height: 350px;
             z-index: 4;
             overflow-y: auto;
         }
 
         .instruction {
-            margin-top: 20px;
+            position: absolute;
+            top: 20px;
             color: #333;
             font-weight: bold;
             background: white;
-            padding: 5px 15px;
-            border-radius: 15px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 20;
         }
+
+        /* --- FOTO DI SAMPING AMPLOP (GRID LOVE) --- */
+        .side-gallery {
+            position: absolute;
+            top: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            opacity: 0;
+            transition: all 1.5s ease-in-out;
+            pointer-events: none; /* Tidak bisa diklik saat belum muncul */
+            z-index: 2;
+        }
+
+        .left-gallery { 
+            left: 8%; 
+            transform: translateY(-50%) translateX(-50px); 
+        }
+        
+        .right-gallery { 
+            right: 8%; 
+            transform: translateY(-50%) translateX(50px); 
+        }
+
+        /* Animasi masuk saat amplop dibuka */
+        .open-gallery.left-gallery { 
+            opacity: 1; 
+            transform: translateY(-50%) translateX(0); 
+            pointer-events: auto; 
+        }
+        
+        .open-gallery.right-gallery { 
+            opacity: 1; 
+            transform: translateY(-50%) translateX(0); 
+            pointer-events: auto; 
+        }
+
+        /* Desain Bingkai Polaroid Love */
+        .love-frame {
+            background: white;
+            padding: 10px 10px 25px 10px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+            width: 160px;
+            transition: transform 0.3s;
+        }
+
+        .love-frame img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            border: 1px solid #ffe6e6;
+        }
+
+        .love-frame:hover { transform: scale(1.1) !important; z-index: 10; cursor: pointer; }
+
+        /* Rotasi Estetik */
+        .left-gallery .love-frame:nth-child(1) { transform: rotate(-8deg); }
+        .left-gallery .love-frame:nth-child(2) { transform: rotate(5deg); }
+        .right-gallery .love-frame:nth-child(1) { transform: rotate(8deg); }
+        .right-gallery .love-frame:nth-child(2) { transform: rotate(-5deg); }
 
         /* --- EFEK BUNGA JATUH --- */
         .flower {
@@ -180,6 +234,28 @@
         }
 
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        /* --- MEDIA QUERY UNTUK LAYAR HP --- */
+        @media (max-width: 768px) {
+            .side-gallery {
+                flex-direction: row;
+                top: auto;
+                bottom: 10%;
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+            }
+            .left-gallery { left: 0; bottom: 15%; transform: translateY(50px); }
+            .right-gallery { right: 0; bottom: 5%; transform: translateY(50px); }
+            
+            .open-gallery.left-gallery, .open-gallery.right-gallery {
+                transform: translateY(0);
+            }
+
+            .love-frame { width: 90px; padding: 5px 5px 15px 5px; }
+            .envelope-wrapper { transform: scale(0.8); margin-top: 150px; }
+            .envelope-wrapper:hover { transform: scale(0.85); }
+        }
     </style>
 </head>
 <body>
@@ -205,20 +281,23 @@
     <div id="envelope-screen">
         <div class="instruction">Ketuk amplopnya sayang! 💌</div>
         
+        <div class="side-gallery left-gallery" id="gallery-left">
+            <div class="love-frame"><img src="poto1.jpeg" alt="Nazuah 1"></div>
+            <div class="love-frame"><img src="poto2.jpeg" alt="Nazuah 2"></div>
+        </div>
+
         <div class="envelope-wrapper" id="envelope" onclick="bukaAmplop()">
             <div class="envelope-flap"></div>
             <div class="letter">
                 <h3>Happy Birthday! 🎉</h3>
                 <p>Selamat Ulang Tahun sayangkuuu cintakuuuu ❤️❤️ semoga di umur kamu yang ke-21 inii, kamu diberikan panjang umur, kesehatan, dan kebahagiaan di hari-hari kamuu! Semoga dengan bertambahnya usiamu, bertambah juga kesabaran kamuu, keimanan kamuu, dan kebaikan-kebaikan buat kamuu!!!</p>
                 <p>Dan semogaa, di hari yang bahagia inii, kamu bisa mengapresiasi segala hal yang sudah kamu capai sampai titik inii. I LOVE YOUUU MY DEAR!! KEEP MOVING AND IMPROVING IN YOUR LIFE YAAAA!!</p>
-                
-                <div class="photo-grid">
-                    <img src="poto1.jpeg" alt="Nazuah 1">
-                    <img src="poto2.jpeg" alt="Nazuah 2">
-                    <img src="poto3.jpeg" alt="Nazuah 2">
-                    <img src="poto4.jpeg" alt="Nazuah 2">
-                </div>
             </div>
+        </div>
+
+        <div class="side-gallery right-gallery" id="gallery-right">
+            <div class="love-frame"><img src="poto1.jpeg" alt="Nazuah 3"></div>
+            <div class="love-frame"><img src="poto4.jpeg" alt="Nazuah 4"></div>
         </div>
     </div>
 
@@ -239,15 +318,15 @@
             setTimeout(() => {
                 terminalDiv.innerHTML += text + '<br>';
                 if (index === terminalTexts.length - 1) {
-                    setTimeout(masukKeLogin, 1500); // Pindah ke layar login setelah selesai
+                    setTimeout(masukKeLogin, 1500);
                 }
             }, delay);
-            delay += 800; // Jeda ngetik per baris
+            delay += 800; 
         });
 
         function masukKeLogin() {
             document.getElementById('terminal').style.display = 'none';
-            document.body.style.backgroundColor = '#ffe6e6'; // Ubah background jadi pink
+            document.body.style.backgroundColor = '#ffe6e6'; 
             document.getElementById('login-screen').style.display = 'block';
         }
 
@@ -261,12 +340,10 @@
             if (input === '23/juni/2023') {
                 errorMsg.style.display = 'none';
                 successMsg.style.display = 'block';
-                btn.style.display = 'none'; // Sembunyikan tombol submit
+                btn.style.display = 'none'; 
 
-                // Putar lagu saat password benar
                 document.getElementById('bgMusic').play().catch(e => console.log("Auto-play diblokir"));
 
-                // Tunggu 3 detik biar dia baca pesannya, lalu pindah ke amplop
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('envelope-screen').style.display = 'flex';
@@ -276,13 +353,21 @@
             }
         }
 
-        // --- LOGIKA TAHAP 3: BUKA AMPLOP & HUJAN BUNGA ---
+        // --- LOGIKA TAHAP 3: BUKA AMPLOP, MUNCULKAN FOTO & HUJAN BUNGA ---
         let amplopTerbuka = false;
         function bukaAmplop() {
             if (!amplopTerbuka) {
+                // Buka amplop
                 document.getElementById('envelope').classList.add('open');
+                
+                // Munculkan galeri foto di kiri dan kanan
+                document.getElementById('gallery-left').classList.add('open-gallery');
+                document.getElementById('gallery-right').classList.add('open-gallery');
+                
                 document.querySelector('.instruction').innerText = "Scroll suratnya ke bawah yaa! 👇";
-                setInterval(buatBunga, 400); // Mulai hujan bunga saat amplop dibuka
+                
+                // Mulai hujan bunga
+                setInterval(buatBunga, 400); 
                 amplopTerbuka = true;
             }
         }
@@ -291,7 +376,6 @@
             const flower = document.createElement('div');
             flower.classList.add('flower');
             
-            // Random bunga sakura atau matahari
             const bungaJenis = ['🌸', '🌺', '🌼', '🌷'];
             flower.innerText = bungaJenis[Math.floor(Math.random() * bungaJenis.length)];
             
@@ -308,5 +392,3 @@
     </script>
 </body>
 </html>
-
-
