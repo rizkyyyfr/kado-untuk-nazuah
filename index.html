@@ -5,48 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Untuk Nazuah Anandita ❤️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=VT323&display=swap');
 
         body {
+            margin: 0;
+            padding: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #ffe6e6; /* Warna pink pastel */
+            background-color: #000;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            color: #333;
-            overflow: hidden; /* Mencegah scroll saat efek hati turun */
+            overflow: hidden;
+            transition: background-color 1s ease;
         }
 
-        .container {
+        /* --- TAHAP 1: TERMINAL HACKER --- */
+        #terminal {
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: #0f0;
+            width: 90%;
+            max-width: 600px;
+            display: block;
+        }
+
+        /* --- TAHAP 2: LOGIN / SECURITY CLEARANCE --- */
+        #login-screen {
+            display: none;
             background: white;
+            color: #333;
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 500px;
+            max-width: 400px;
             width: 90%;
-            z-index: 10; /* Agar kotak ucapan tetap di depan efek hati */
-            position: relative;
+            z-index: 10;
         }
 
-        .step {
-            display: none;
+        #login-screen h2 { color: #ff4d4d; }
+        
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 20px 0;
+            border: 2px solid #ffb3b3;
+            border-radius: 10px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
         }
-
-        .step.active {
-            display: block;
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 { font-weight: 600; color: #ff4d4d; }
-        p { font-size: 1.1em; line-height: 1.6; }
 
         button {
             background-color: #ff4d4d;
@@ -57,114 +67,242 @@
             cursor: pointer;
             font-size: 1em;
             font-weight: 600;
-            margin-top: 25px;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
         }
 
         button:hover { background-color: #ff1a1a; transform: scale(1.05); }
 
-        /* Styling untuk ASCII Art */
-        .ascii-art {
-            font-family: monospace;
-            white-space: pre;
-            font-size: 6px; 
-            line-height: 6px;
-            text-align: center;
-            margin-top: 20px;
-            background: #fdfdfd;
-            padding: 15px;
-            border-radius: 10px;
-            overflow-x: auto;
-            border: 1px dashed #ffb3b3;
+        #error-msg { color: red; font-size: 0.9em; display: none; margin-bottom: 15px; }
+        #success-msg { color: #4CAF50; font-size: 1.1em; font-weight: bold; display: none; margin-bottom: 15px; }
+
+        /* --- TAHAP 3: SURAT & GALERI FOTO --- */
+        #envelope-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            width: 100%;
         }
 
-        /* Styling untuk Efek Hati Jatuh */
-        .heart {
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: #ff6666;
+            border-radius: 0 0 10px 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-top: 50px;
+        }
+
+        .envelope-wrapper:hover { transform: scale(1.05); }
+
+        /* Segitiga tutup amplop */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #ff4d4d;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 3;
+        }
+
+        /* Kertas Surat di dalam amplop */
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 10px;
+            transition: transform 1s ease, height 1s ease;
+            z-index: 2;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #333;
+            overflow-y: hidden;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .letter h3 { color: #ff4d4d; margin-top: 0; }
+        .letter p { font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; }
+
+        /* Grid Foto di dalam surat */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            border-radius: 8px;
+            border: 3px solid #ffe6e6;
+            box-sizing: border-box;
+        }
+
+        /* Class untuk animasi membuka amplop */
+        .open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .open .letter {
+            transform: translateY(-250px);
+            height: 500px; /* Panjang surat saat ditarik keluar */
+            z-index: 4;
+            overflow-y: auto;
+        }
+
+        .instruction {
+            margin-top: 20px;
+            color: #333;
+            font-weight: bold;
+            background: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        /* --- EFEK BUNGA JATUH --- */
+        .flower {
             position: fixed;
             top: -10vh;
-            font-size: 24px;
+            font-size: 20px;
             z-index: 1;
             animation: fall linear forwards;
             opacity: 0.8;
+            pointer-events: none;
         }
 
-        @keyframes fall {
-            to { transform: translateY(110vh); }
-        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <audio id="bgMusic" loop>
-        <source src="laguhbd.mp3" type="audio/mpeg">
+        <source src="lagu-namoy.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="container">
-        <div id="step1" class="step active">
-            <h2>Haii cantiikkuu, sayangkuu, duniakuu ❤️</h2>
-            <button onclick="nextStep(1)">Next ➔</button>
-        </div>
+    <div id="terminal"></div>
 
-        <div id="step2" class="step">
-            <h2>Hari ini hari yang sangat spesial ✨</h2>
-            <button onclick="nextStep(2)">Next ➔</button>
-        </div>
+    <div id="login-screen">
+        <h2>Security Clearance 🔐</h2>
+        <p>Silakan masukkan tanggal jadian kita untuk melanjutkan.</p>
+        <p style="font-size: 0.8em; color: gray;">(Format: tanggal/bulan/tahun, contoh: 01/januari/2020)</p>
+        
+        <input type="text" id="password" placeholder="Jawabanmu..." autocomplete="off">
+        <div id="error-msg">Hayo lupa ya? Coba ingat-ingat lagi! 🤨</div>
+        <div id="success-msg">Verifikasi berhasil! Kamu terbukti sebagai pacarku! ❤️</div>
+        
+        <button onclick="cekPassword()">Submit</button>
+    </div>
 
-        <div id="step3" class="step">
-            <h2>Happy Birthday, Nazuah Anandita! 🎂🎉</h2>
-            <p>Selamat bertambah usia, sayang. Semoga hari-harimu selalu dipenuhi kebahagiaan, kesehatan, dan semua impianmu bisa tercapai. Makasih udah jadi bagian terindah di hidup aku.</p>
-            
-            <div class="ascii-art">
-[PASTE HASIL GAMBAR ASCII WAJAH NAZUAH DI SINI]
+    <div id="envelope-screen">
+        <div class="instruction">Ketuk amplopnya sayang! 💌</div>
+        
+        <div class="envelope-wrapper" id="envelope" onclick="bukaAmplop()">
+            <div class="envelope-flap"></div>
+            <div class="letter">
+                <h3>Happy Birthday! 🎉</h3>
+                <p>Selamat Ulang Tahun sayangkuuu cintakuuuu ❤️❤️ semoga di umur kamu yang ke-21 inii, kamu diberikan panjang umur, kesehatan, dan kebahagiaan di hari-hari kamuu! Semoga dengan bertambahnya usiamu, bertambah juga kesabaran kamuu, keimanan kamuu, dan kebaikan-kebaikan buat kamuu!!!</p>
+                <p>Dan semogaa, di hari yang bahagia inii, kamu bisa mengapresiasi segala hal yang sudah kamu capai sampai titik inii. I LOVE YOUUU MY DEAR!! KEEP MOVING AND IMPROVING IN YOUR LIFE YAAAA!!</p>
+                
+                <div class="photo-grid">
+                    <img src="foto-nazuah-1.jpg" alt="Nazuah 1">
+                    <img src="foto-nazuah-2.jpg" alt="Nazuah 2">
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function nextStep(current) {
-            // Pindah ke step berikutnya
-            document.getElementById('step' + current).classList.remove('active');
-            let next = current + 1;
-            document.getElementById('step' + next).classList.add('active');
+        // --- LOGIKA TAHAP 1: TERMINAL TYPING EFFECT ---
+        const terminalTexts = [
+            "> Initializing connection to Nazuah's heart...",
+            "> Bypassing firewall... [OK]",
+            "> Accessing special_day.exe... [GRANTED]",
+            "> Loading memories...",
+            "> Ready."
+        ];
+        
+        const terminalDiv = document.getElementById('terminal');
+        let delay = 0;
 
-            // Jika masuk ke step 3 (halaman terakhir)
-            if (next === 3) {
-                mulaiKejutan();
+        terminalTexts.forEach((text, index) => {
+            setTimeout(() => {
+                terminalDiv.innerHTML += text + '<br>';
+                if (index === terminalTexts.length - 1) {
+                    setTimeout(masukKeLogin, 1500); // Pindah ke layar login setelah selesai
+                }
+            }, delay);
+            delay += 800; // Jeda ngetik per baris
+        });
+
+        function masukKeLogin() {
+            document.getElementById('terminal').style.display = 'none';
+            document.body.style.backgroundColor = '#ffe6e6'; // Ubah background jadi pink
+            document.getElementById('login-screen').style.display = 'block';
+        }
+
+        // --- LOGIKA TAHAP 2: CEK PASSWORD ---
+        function cekPassword() {
+            const input = document.getElementById('password').value.toLowerCase().replace(/\s/g, '');
+            const errorMsg = document.getElementById('error-msg');
+            const successMsg = document.getElementById('success-msg');
+            const btn = document.querySelector('button');
+
+            if (input === '23/juni/2023') {
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'block';
+                btn.style.display = 'none'; // Sembunyikan tombol submit
+
+                // Putar lagu saat password benar
+                document.getElementById('bgMusic').play().catch(e => console.log("Auto-play diblokir"));
+
+                // Tunggu 3 detik biar dia baca pesannya, lalu pindah ke amplop
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('envelope-screen').style.display = 'flex';
+                }, 3000);
+            } else {
+                errorMsg.style.display = 'block';
             }
         }
 
-        function mulaiKejutan() {
-            // 1. Memutar Lagu
-            let audio = document.getElementById("bgMusic");
-            audio.play().catch(error => console.log("Autoplay audio ditolak oleh browser."));
-
-            // 2. Memulai Animasi Hujan Hati
-            setInterval(buatHati, 300); // Membuat 1 hati setiap 300 milidetik
+        // --- LOGIKA TAHAP 3: BUKA AMPLOP & HUJAN BUNGA ---
+        let amplopTerbuka = false;
+        function bukaAmplop() {
+            if (!amplopTerbuka) {
+                document.getElementById('envelope').classList.add('open');
+                document.querySelector('.instruction').innerText = "Scroll suratnya ke bawah yaa! 👇";
+                setInterval(buatBunga, 400); // Mulai hujan bunga saat amplop dibuka
+                amplopTerbuka = true;
+            }
         }
 
-        function buatHati() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerText = '❤️';
+        function buatBunga() {
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
             
-            // Posisi horizontal acak (dari kiri ke kanan layar)
-            heart.style.left = Math.random() * 100 + 'vw';
+            // Random bunga sakura atau matahari
+            const bungaJenis = ['🌸', '🌺', '🌼', '🌷'];
+            flower.innerText = bungaJenis[Math.floor(Math.random() * bungaJenis.length)];
             
-            // Kecepatan jatuh acak (antara 3 sampai 5 detik)
-            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
-            
-            // Ukuran hati acak (agar lebih dinamis)
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDuration = Math.random() * 3 + 4 + 's';
+            flower.style.fontSize = Math.random() * 15 + 15 + 'px';
 
-            document.body.appendChild(heart);
+            document.body.appendChild(flower);
 
-            // Hapus elemen hati setelah jatuh melewati layar agar memori tidak penuh
             setTimeout(() => {
-                heart.remove();
-            }, 5000);
+                flower.remove();
+            }, 6000);
         }
     </script>
-
 </body>
 </html>
