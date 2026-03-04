@@ -17,7 +17,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
             transition: background-color 1s ease;
         }
 
@@ -28,10 +28,9 @@
             color: #0f0;
             width: 90%;
             max-width: 600px;
-            display: block;
         }
 
-        /* --- TAHAP 2: LOGIN / SECURITY CLEARANCE --- */
+        /* --- TAHAP 2: LOGIN SCREEN --- */
         #login-screen {
             display: none;
             background: white;
@@ -45,7 +44,7 @@
             z-index: 10;
         }
 
-        #login-screen h2 { color: #ff4d4d; }
+        #login-screen h2 { color: #ff4d4d; margin-top: 0; }
         
         input[type="text"] {
             width: 80%;
@@ -76,151 +75,161 @@
         #error-msg { color: red; font-size: 0.9em; display: none; margin-bottom: 15px; }
         #success-msg { color: #4CAF50; font-size: 1.1em; font-weight: bold; display: none; margin-bottom: 15px; }
 
-        /* --- TAHAP 3: SURAT & GALERI FOTO --- */
+        /* --- TAHAP 3: LAYOUT AMPLOP & GALERI FOTO --- */
         #envelope-screen {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            width: 100vw;
-            height: 100vh;
-            position: relative; /* Penting untuk posisi foto di samping */
-        }
-
-        .envelope-wrapper {
-            position: relative;
-            width: 300px;
-            height: 200px;
-            background-color: #ff6666;
-            border-radius: 0 0 10px 10px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            margin-top: 100px;
-            z-index: 5;
-        }
-
-        .envelope-wrapper:hover { transform: scale(1.05); }
-
-        /* Segitiga tutup amplop */
-        .envelope-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 100px solid #ff4d4d;
-            transform-origin: top;
-            transition: transform 0.8s ease;
-            z-index: 3;
-        }
-
-        /* Kertas Surat di dalam amplop */
-        .letter {
-            position: absolute;
-            bottom: 0;
-            left: 5%;
-            width: 90%;
-            height: 90%;
-            background: white;
-            border-radius: 10px;
-            transition: transform 1s ease, height 1s ease;
-            z-index: 2;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #333;
-            overflow: hidden;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        }
-
-        .letter h3 { color: #ff4d4d; margin-top: 0; }
-        .letter p { font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; }
-
-        /* Animasi membuka amplop & menarik surat */
-        .open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
-        .open .letter {
-            transform: translateY(-280px); /* Ditarik lebih tinggi */
-            height: max-content; /* Ukuran menyesuaikan teks */
-            min-height: 350px;
-            z-index: 4;
-            overflow-y: auto;
+            width: 100%;
+            min-height: 100vh;
+            padding-top: 50px; /* Spasi agar surat tidak keluar layar saat ditarik ke atas */
         }
 
         .instruction {
-            position: absolute;
-            top: 20px;
             color: #333;
             font-weight: bold;
             background: white;
-            padding: 8px 20px;
+            padding: 8px 25px;
             border-radius: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 120px; /* Jarak dari instruksi ke amplop */
             z-index: 20;
         }
 
-        /* --- FOTO DI SAMPING AMPLOP (GRID LOVE) --- */
+        /* Container Pembungkus Kiri - Tengah - Kanan */
+        .main-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* --- DESAIN FOTO POLAROID SAMPING --- */
         .side-gallery {
-            position: absolute;
-            top: 50%;
             display: flex;
             flex-direction: column;
             gap: 20px;
             opacity: 0;
-            transition: all 1.5s ease-in-out;
-            pointer-events: none; /* Tidak bisa diklik saat belum muncul */
-            z-index: 2;
+            transform: scale(0.5);
+            transition: all 1s ease-in-out;
+            pointer-events: none;
         }
 
-        .left-gallery { 
-            left: 8%; 
-            transform: translateY(-50%) translateX(-50px); 
-        }
-        
-        .right-gallery { 
-            right: 8%; 
-            transform: translateY(-50%) translateX(50px); 
+        .side-gallery.open-gallery {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
         }
 
-        /* Animasi masuk saat amplop dibuka */
-        .open-gallery.left-gallery { 
-            opacity: 1; 
-            transform: translateY(-50%) translateX(0); 
-            pointer-events: auto; 
-        }
-        
-        .open-gallery.right-gallery { 
-            opacity: 1; 
-            transform: translateY(-50%) translateX(0); 
-            pointer-events: auto; 
-        }
-
-        /* Desain Bingkai Polaroid Love */
-        .love-frame {
+        .polaroid {
+            width: 140px;
             background: white;
-            padding: 10px 10px 25px 10px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
-            width: 160px;
+            padding: 8px 8px 25px 8px;
+            border-radius: 5px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             transition: transform 0.3s;
         }
 
-        .love-frame img {
+        .polaroid img {
             width: 100%;
             height: auto;
-            border-radius: 5px;
-            border: 1px solid #ffe6e6;
+            border-radius: 3px;
         }
 
-        .love-frame:hover { transform: scale(1.1) !important; z-index: 10; cursor: pointer; }
+        .polaroid:hover {
+            transform: scale(1.15) !important;
+            z-index: 50;
+            cursor: pointer;
+        }
 
-        /* Rotasi Estetik */
-        .left-gallery .love-frame:nth-child(1) { transform: rotate(-8deg); }
-        .left-gallery .love-frame:nth-child(2) { transform: rotate(5deg); }
-        .right-gallery .love-frame:nth-child(1) { transform: rotate(8deg); }
-        .right-gallery .love-frame:nth-child(2) { transform: rotate(-5deg); }
+        .tilt-left { transform: rotate(-6deg); }
+        .tilt-right { transform: rotate(6deg); }
+
+
+        /* --- DESAIN AMPLOP (Sistem Layering 3D) --- */
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Bagian Belakang Amplop */
+        .envelope-back {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #ff6666;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        /* Kertas Surat di Tengah-Tengah Layer */
+        .letter {
+            position: absolute;
+            bottom: 10px; /* Ada di dalam amplop */
+            left: 5%;
+            width: 90%;
+            max-height: 200px; /* Disembunyikan sebagian di awal */
+            background: white;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            color: #333;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            transition: transform 1s ease, max-height 1s ease;
+            overflow: hidden;
+            z-index: 2; /* Surat berada di atas layer belakang */
+        }
+
+        .letter h3 { color: #ff4d4d; margin-top: 0; margin-bottom: 10px; font-size: 1.2em; }
+        .letter p { font-size: 0.85em; line-height: 1.5; margin-bottom: 10px; }
+
+        /* Bagian Depan Amplop */
+        .envelope-front {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 160px solid #ff4d4d;
+            border-right: 160px solid #ff4d4d;
+            border-bottom: 110px solid #e63939;
+            border-top: 110px solid transparent;
+            border-radius: 0 0 10px 10px;
+            z-index: 3; /* Depan berada di atas surat */
+            pointer-events: none;
+        }
+
+        /* Tutup Atas Amplop */
+        .envelope-flap {
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 120px solid #ff4d4d;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 4; /* Paling atas saat belum dibuka */
+        }
+
+        /* --- KETIKA AMPLOP DIBUKA --- */
+        .open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1; /* Pindah ke lapisan paling belakang */
+        }
+
+        .open .letter {
+            transform: translateY(-160px); /* Menarik surat ke atas */
+            max-height: 400px; /* Panjang kertas melebar */
+            overflow-y: auto; /* Memunculkan scroll kalau kepanjangan */
+            z-index: 5; /* Pindah ke lapisan paling depan agar tidak ketutup amplop depan */
+        }
+
 
         /* --- EFEK BUNGA JATUH --- */
         .flower {
@@ -232,29 +241,21 @@
             opacity: 0.8;
             pointer-events: none;
         }
-
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-        /* --- MEDIA QUERY UNTUK LAYAR HP --- */
+        /* --- RESPONSIVE LAYOUT UNTUK HP --- */
         @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column; /* Ubah ke susunan vertikal */
+                gap: 30px;
+                padding-top: 80px;
+            }
             .side-gallery {
-                flex-direction: row;
-                top: auto;
-                bottom: 10%;
-                width: 100%;
-                justify-content: center;
-                gap: 10px;
+                flex-direction: row; /* Fotonya jadi berjejer nyamping */
+                gap: 15px;
             }
-            .left-gallery { left: 0; bottom: 15%; transform: translateY(50px); }
-            .right-gallery { right: 0; bottom: 5%; transform: translateY(50px); }
-            
-            .open-gallery.left-gallery, .open-gallery.right-gallery {
-                transform: translateY(0);
-            }
-
-            .love-frame { width: 90px; padding: 5px 5px 15px 5px; }
-            .envelope-wrapper { transform: scale(0.8); margin-top: 150px; }
-            .envelope-wrapper:hover { transform: scale(0.85); }
+            .polaroid { width: 110px; }
+            .envelope-wrapper { transform: scale(0.9); }
         }
     </style>
 </head>
@@ -281,28 +282,36 @@
     <div id="envelope-screen">
         <div class="instruction">Ketuk amplopnya sayang! 💌</div>
         
-        <div class="side-gallery left-gallery" id="gallery-left">
-            <div class="love-frame"><img src="poto1.jpeg" alt="Nazuah 1"></div>
-            <div class="love-frame"><img src="poto2.jpeg" alt="Nazuah 2"></div>
-        </div>
-
-        <div class="envelope-wrapper" id="envelope" onclick="bukaAmplop()">
-            <div class="envelope-flap"></div>
-            <div class="letter">
-                <h3>Happy Birthday! 🎉</h3>
-                <p>Selamat Ulang Tahun sayangkuuu cintakuuuu ❤️❤️ semoga di umur kamu yang ke-21 inii, kamu diberikan panjang umur, kesehatan, dan kebahagiaan di hari-hari kamuu! Semoga dengan bertambahnya usiamu, bertambah juga kesabaran kamuu, keimanan kamuu, dan kebaikan-kebaikan buat kamuu!!!</p>
-                <p>Dan semogaa, di hari yang bahagia inii, kamu bisa mengapresiasi segala hal yang sudah kamu capai sampai titik inii. I LOVE YOUUU MY DEAR!! KEEP MOVING AND IMPROVING IN YOUR LIFE YAAAA!!</p>
+        <div class="main-layout">
+            
+            <div class="side-gallery" id="gallery-left">
+                <div class="polaroid tilt-left"><img src="poto1.jpeg" alt="Nazuah 1"></div>
+                <div class="polaroid tilt-right"><img src="poto2.jpeg" alt="Nazuah 2"></div>
             </div>
-        </div>
 
-        <div class="side-gallery right-gallery" id="gallery-right">
-            <div class="love-frame"><img src="poto1.jpeg" alt="Nazuah 3"></div>
-            <div class="love-frame"><img src="poto4.jpeg" alt="Nazuah 4"></div>
+            <div class="envelope-wrapper" id="envelope" onclick="bukaAmplop()">
+                <div class="envelope-back"></div>
+                
+                <div class="letter">
+                    <h3>Happy Birthday! 🎉</h3>
+                    <p>Selamat Ulang Tahun sayangkuuu cintakuuuu ❤️❤️ semoga di umur kamu yang ke-21 inii, kamu diberikan panjang umur, kesehatan, dan kebahagiaan di hari-hari kamuu! Semoga dengan bertambahnya usiamu, bertambah juga kesabaran kamuu, keimanan kamuu, dan kebaikan-kebaikan buat kamuu!!!</p>
+                    <p>Dan semogaa, di hari yang bahagia inii, kamu bisa mengapresiasi segala hal yang sudah kamu capai sampai titik inii. I LOVE YOUUU MY DEAR!! KEEP MOVING AND IMPROVING IN YOUR LIFE YAAAA!!</p>
+                </div>
+                
+                <div class="envelope-front"></div>
+                <div class="envelope-flap"></div>
+            </div>
+
+            <div class="side-gallery" id="gallery-right">
+                <div class="polaroid tilt-right"><img src="poto3.jpeg" alt="Nazuah 3"></div>
+                <div class="polaroid tilt-left"><img src="poto4.jpeg" alt="Nazuah 4"></div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // --- LOGIKA TAHAP 1: TERMINAL TYPING EFFECT ---
+        // LOGIKA TERMINAL HACKER
         const terminalTexts = [
             "> Initializing connection to Nazuah's heart...",
             "> Bypassing firewall... [OK]",
@@ -330,7 +339,7 @@
             document.getElementById('login-screen').style.display = 'block';
         }
 
-        // --- LOGIKA TAHAP 2: CEK PASSWORD ---
+        // LOGIKA CEK PASSWORD
         function cekPassword() {
             const input = document.getElementById('password').value.toLowerCase().replace(/\s/g, '');
             const errorMsg = document.getElementById('error-msg');
@@ -353,20 +362,21 @@
             }
         }
 
-        // --- LOGIKA TAHAP 3: BUKA AMPLOP, MUNCULKAN FOTO & HUJAN BUNGA ---
+        // LOGIKA BUKA AMPLOP, MUNCULKAN FOTO & BUNGA
         let amplopTerbuka = false;
         function bukaAmplop() {
             if (!amplopTerbuka) {
-                // Buka amplop
+                // 1. Ubah class amplop agar surat naik ke atas
                 document.getElementById('envelope').classList.add('open');
                 
-                // Munculkan galeri foto di kiri dan kanan
+                // 2. Munculkan galeri foto di kiri dan kanan
                 document.getElementById('gallery-left').classList.add('open-gallery');
                 document.getElementById('gallery-right').classList.add('open-gallery');
                 
-                document.querySelector('.instruction').innerText = "Scroll suratnya ke bawah yaa! 👇";
+                // 3. Ubah teks instruksi
+                document.querySelector('.instruction').innerText = "Scroll suratnya kalau kepanjangan yaa! 👇";
                 
-                // Mulai hujan bunga
+                // 4. Mulai hujan bunga
                 setInterval(buatBunga, 400); 
                 amplopTerbuka = true;
             }
